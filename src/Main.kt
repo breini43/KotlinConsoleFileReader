@@ -1,23 +1,31 @@
 import java.io.File
 
 fun main() {
+    val filePath = "D:\\1.txt"
+    val file = File(filePath)
 
-// Используем блок try для обработки возможных исключений при чтении файла
-    try {
-        // Создаем переменную File, указывая путь к файлу
-        val inputString = File("D:\\2.txt")
-        // Открываем BufferedReader для чтения файла
-        .bufferedReader()
-        // Используем метод use, который автоматически закроет BufferedReader после использования
-        .use { it.readText() } // Читаем весь текст из файла и сохраняем его в переменной inputString
-
-        // Выводим на консоль сообщение о том, что будет выведено содержимое файла
-        println("Содержимое файла:")
-        // Выводим на консоль содержимое файла
-        println(inputString)
-        } catch (e: Exception) {
-        // В случае возникновения исключения выводим сообщение об ошибке и её описание
-        println("Ошибка при чтении файла: ${e.message}")
-        }
-
+    // Чтение содержимого файла
+    if (!file.exists()) {
+        println("Файл не найден, создается новый файл.")
+        file.createNewFile()
     }
+
+    val initialContent = file.readText()
+    println("Содержимое файла:")
+    println(initialContent)
+
+    // Предложить пользователю добавить текст
+    println("Введите текст для добавления в файл (или оставьте строку пустой для выхода):")
+    val userInput = readLine().orEmpty()
+
+    if (userInput.isNotEmpty()) {
+        // Добавить новый текст к существующему содержимому
+        val updatedContent = "$initialContent\n$userInput"
+
+        // Записать обновленное содержимое обратно в файл
+        file.writeText(updatedContent)
+        println("Текст успешно добавлен и сохранен в файл.")
+    } else {
+        println("Никакой текст не был введен. Выход без изменений.")
+    }
+}
